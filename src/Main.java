@@ -40,17 +40,17 @@ class AirConditioner {
 
     public AirConditioner() {
         this.state = ApplianceState.OFF;
-        this.mode = "off";  // Default mode is "off"
+        this.mode = "off";
     }
 
     public void toggle() {
         if (this.state == ApplianceState.OFF) {
             this.state = ApplianceState.ON;
-            this.mode = "cooling";  // When turning on, set mode to "cooling"
+            this.mode = "cooling";
             System.out.println("The air conditioner is now ON in cooling mode.");
         } else {
             this.state = ApplianceState.OFF;
-            this.mode = "off";  // When turning off, set mode to "off"
+            this.mode = "off";
             System.out.println("The air conditioner is now OFF (thermostat set to 'off' mode).");
         }
     }
@@ -113,6 +113,7 @@ public class Main {
         AirConditioner ac = new AirConditioner();
 
         LocalDateTime now = LocalDateTime.now();
+
         // test date for update
         //LocalDateTime now = LocalDateTime.of(LocalDateTime.now().getYear(), Month.JANUARY, 1, 1, 0);
 
@@ -156,8 +157,8 @@ public class Main {
             System.out.println("System Update: Turning off all devices for the yearly update...");
 
             light.turnOffForUpdate();
-//            fan.turnOffForUpdate();
-//            ac.turnOffForUpdate();
+            fan.turnOffForUpdate();
+            ac.turnOffForUpdate();
         } else {
             System.out.println("System Update: No update needed at this time.");
         }
