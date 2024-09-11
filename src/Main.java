@@ -120,23 +120,15 @@ public class Main {
             }
 
             switch (choice) {
-                case "L":
-                    handleToggleAppliance(sc, light, "Light", light.getState().toString());
-                    break;
-                case "F":
-                    handleToggleAppliance(sc, fan, "Fan", String.valueOf(fan.getSpeed()));
-                    break;
-                case "A":
-                    handleToggleAppliance(sc, ac, "Air Conditioner", ac.getState().toString());
-                    break;
-                default:
-                    System.out.println("Invalid selection. Please enter L, F, or A.");
-                    break;
+                case "L" -> handleToggleAppliance(sc, light, "Light", light.getState().toString());
+                case "F" -> handleToggleAppliance(sc, fan, "Fan", String.valueOf(fan.getSpeed()));
+                case "A" -> handleToggleAppliance(sc, ac, "Air Conditioner", ac.getState().toString());
+                default -> System.out.println("Invalid selection. Please enter L, F, or A.");
             }
 
         }
 
-//        sc.close();
+        sc.close();
     }
 
     public static <T> void handleToggleAppliance(Scanner sc, T appliance, String applianceName, String currentState) {
