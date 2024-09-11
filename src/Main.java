@@ -56,11 +56,37 @@ class AirConditioner {
     }
 }
 
+class Fan {
+    private int speed;
+
+    public Fan() {
+        this.speed = 0;
+    }
+
+    public void toggle() {
+        if (this.speed == 0) {
+            this.speed = 1;
+            System.out.println("The fan is now ON at low speed (speed 1).");
+        } else if (this.speed == 1) {
+            this.speed = 2;
+            System.out.println("The fan is now ON at high speed (speed 2).");
+        } else {
+            this.speed = 0;
+            System.out.println("The fan is now OFF (speed 0).");
+        }
+    }
+
+    public int getSpeed() {
+        return this.speed;
+    }
+}
+
 public class Main {
     public static void main(String[] args) {
 
         Scanner sc = new Scanner(System.in);
         Light light = new Light();
+        Fan fan = new Fan();
         AirConditioner ac = new AirConditioner();
 
         final String INVALID_CHOICE_MESSAGE = "Invalid choice. Please enter y, n, or q.";
@@ -99,7 +125,21 @@ public class Main {
                     }
                     break;
                 case "F":
-                    System.out.println("You selected Fan.");
+                    while (true) {
+                        System.out.println("You selected Fan. The current speed is: " + fan.getSpeed());
+                        System.out.println("Would you like to toggle the fan? (y for yes, n for no, q to quit)");
+                        String toggleChoice = sc.nextLine().toLowerCase();
+                        if (toggleChoice.equals("y")) {
+                            fan.toggle();
+                        } else if (toggleChoice.equals("n")) {
+                            break;
+                        } else if (toggleChoice.equals("q")) {
+                            System.out.println(EXIT_MESSAGE);
+                            System.exit(0);
+                        } else {
+                            System.out.println(INVALID_CHOICE_MESSAGE);
+                        }
+                    }
                     break;
                 case "A":
                     while (true) {
