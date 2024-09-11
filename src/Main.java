@@ -12,13 +12,25 @@ class Light {
     }
 
     public void toggle() {
+
+
         if (this.state == ApplianceState.OFF) {
             this.state = ApplianceState.ON;
-            System.out.println("The light is now ON.");
+
         } else {
             this.state = ApplianceState.OFF;
-            System.out.println("The light is now OFF.");
+
         }
+        System.out.println("The light is now: " + this.state);
+
+
+//        if (this.state == ApplianceState.OFF) {
+//            this.state = ApplianceState.ON;
+//            System.out.println("The light is now ON.");
+//        } else {
+//            this.state = ApplianceState.OFF;
+//            System.out.println("The light is now OFF.");
+//        }
     }
 
     public ApplianceState getState() {
@@ -66,13 +78,13 @@ class Fan {
     public void toggle() {
         if (this.speed == 0) {
             this.speed = 1;
-            System.out.println("The fan is now ON at low speed (speed 1).");
+            System.out.println("The fan is now at speed 1");
         } else if (this.speed == 1) {
             this.speed = 2;
-            System.out.println("The fan is now ON at high speed (speed 2).");
+            System.out.println("The fan is now at  speed 2");
         } else {
             this.speed = 0;
-            System.out.println("The fan is now OFF (speed 0).");
+            System.out.println("The fan is now at speed 0");
         }
     }
 
@@ -82,15 +94,16 @@ class Fan {
 }
 
 public class Main {
+
+    public static final String INVALID_CHOICE_MESSAGE = "Invalid choice. Please enter y, n, or q.";
+    public static final String EXIT_MESSAGE = "Exiting the system. Goodbye!";
+
     public static void main(String[] args) {
 
         Scanner sc = new Scanner(System.in);
         Light light = new Light();
         Fan fan = new Fan();
         AirConditioner ac = new AirConditioner();
-
-        final String INVALID_CHOICE_MESSAGE = "Invalid choice. Please enter y, n, or q.";
-        final String EXIT_MESSAGE = "Exiting the system. Goodbye!";
 
         System.out.println("Hi! You are in the Smart Home Appliance Control System!");
 
@@ -108,55 +121,13 @@ public class Main {
 
             switch (choice) {
                 case "L":
-                    while (true) {
-                        System.out.println("You selected Light. The current state is: " + light.getState());
-                        System.out.println("Would you like to toggle the light? (y for yes, n for no, q to quit)");
-                        String toggleChoice = sc.nextLine().toLowerCase();
-                        if (toggleChoice.equals("y")) {
-                            light.toggle();
-                        } else if (toggleChoice.equals("n")) {
-                            break;
-                        } else if (toggleChoice.equals("q")) {
-                            System.out.println(EXIT_MESSAGE);
-                            System.exit(0);
-                        } else {
-                            System.out.println(INVALID_CHOICE_MESSAGE);
-                        }
-                    }
+                    handleToggleAppliance(sc, light, "Light", light.getState().toString());
                     break;
                 case "F":
-                    while (true) {
-                        System.out.println("You selected Fan. The current speed is: " + fan.getSpeed());
-                        System.out.println("Would you like to toggle the fan? (y for yes, n for no, q to quit)");
-                        String toggleChoice = sc.nextLine().toLowerCase();
-                        if (toggleChoice.equals("y")) {
-                            fan.toggle();
-                        } else if (toggleChoice.equals("n")) {
-                            break;
-                        } else if (toggleChoice.equals("q")) {
-                            System.out.println(EXIT_MESSAGE);
-                            System.exit(0);
-                        } else {
-                            System.out.println(INVALID_CHOICE_MESSAGE);
-                        }
-                    }
+                    handleToggleAppliance(sc, fan, "Fan", String.valueOf(fan.getSpeed()));
                     break;
                 case "A":
-                    while (true) {
-                        System.out.println("You selected Air Conditioner. The current state is: " + ac.getState());
-                        System.out.println("Would you like to toggle the air conditioner? (y for yes, n for no, q to quit)");
-                        String toggleChoice = sc.nextLine().toLowerCase();
-                        if (toggleChoice.equals("y")) {
-                            ac.toggle();
-                        } else if (toggleChoice.equals("n")) {
-                            break;  //
-                        } else if (toggleChoice.equals("q")) {
-                            System.out.println(EXIT_MESSAGE);
-                            System.exit(0);
-                        } else {
-                            System.out.println(INVALID_CHOICE_MESSAGE);
-                        }
-                    }
+                    handleToggleAppliance(sc, ac, "Air Conditioner", ac.getState().toString());
                     break;
                 default:
                     System.out.println("Invalid selection. Please enter L, F, or A.");
@@ -166,6 +137,34 @@ public class Main {
         }
 
 //        sc.close();
+    }
+
+    public static <T> void handleToggleAppliance(Scanner sc, T appliance, String applianceName, String currentState) {
+        label:
+        while (true) {
+            System.out.println("Would you like to toggle the " + applianceName.toLowerCase() + "? (y for yes, n for no, q to quit)");
+            String toggleChoice = sc.nextLine().toLowerCase();
+
+            switch (toggleChoice) {
+                case "y":
+                    if (appliance instanceof Light) {
+                        ((Light) appliance).toggle();
+                    } else if (appliance instanceof Fan) {
+                        ((Fan) appliance).toggle();
+                    } else if (appliance instanceof AirConditioner) {
+                        ((AirConditioner) appliance).toggle();
+                    }
+                    break;
+                case "n":
+                    break label;
+                case "q":
+                    System.out.println(EXIT_MESSAGE);
+                    System.exit(0);
+                default:
+                    System.out.println(Main.INVALID_CHOICE_MESSAGE);
+                    break;
+            }
+        }
     }
 }
 
