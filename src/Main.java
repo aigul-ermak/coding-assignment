@@ -1,8 +1,11 @@
+import java.time.LocalDateTime;
+import java.time.Month;
 import java.util.Scanner;
 
 enum ApplianceState {
     ON, OFF
 }
+
 
 class Light {
     private ApplianceState state;
@@ -13,24 +16,17 @@ class Light {
 
     public void toggle() {
 
-
         if (this.state == ApplianceState.OFF) {
             this.state = ApplianceState.ON;
-
         } else {
             this.state = ApplianceState.OFF;
-
         }
         System.out.println("The light is now: " + this.state);
+    }
 
-
-//        if (this.state == ApplianceState.OFF) {
-//            this.state = ApplianceState.ON;
-//            System.out.println("The light is now ON.");
-//        } else {
-//            this.state = ApplianceState.OFF;
-//            System.out.println("The light is now OFF.");
-//        }
+    public void turnOffForUpdate() {
+        this.state = ApplianceState.OFF;
+        System.out.println("The light has been turned " + this.state  + " for the system update." );
     }
 
     public ApplianceState getState() {
@@ -57,6 +53,12 @@ class AirConditioner {
             this.mode = "off";  // When turning off, set mode to "off"
             System.out.println("The air conditioner is now OFF (thermostat set to 'off' mode).");
         }
+    }
+
+    public void turnOffForUpdate() {
+        this.state = ApplianceState.OFF;
+        this.mode = "off";
+        System.out.println("The air conditioner has been turned " + this.state  + " for the system update.");
     }
 
     public ApplianceState getState() {
@@ -88,6 +90,11 @@ class Fan {
         }
     }
 
+    public void turnOffForUpdate() {
+        this.speed = 0;
+        System.out.println("The fan has been turned OFF for the system update.");
+    }
+
     public int getSpeed() {
         return this.speed;
     }
@@ -105,30 +112,55 @@ public class Main {
         Fan fan = new Fan();
         AirConditioner ac = new AirConditioner();
 
-        System.out.println("Hi! You are in the Smart Home Appliance Control System!");
+        LocalDateTime now = LocalDateTime.now();
+        // test date for update
+        //LocalDateTime now = LocalDateTime.of(LocalDateTime.now().getYear(), Month.JANUARY, 1, 1, 0);
 
-        while (true) {
-            System.out.println("What do you want to choose: Light, Fan, or Air Conditioner?");
+        if (now.getMonth() == Month.JANUARY && now.getDayOfMonth() == 1 && now.getHour() == 1 && now.getMinute() == 0) {
+            System.out.println("Turning off all devices for the yearly update.");
+            light.turnOffForUpdate();
+            fan.turnOffForUpdate();
+            ac.turnOffForUpdate();
+        } else {
 
-            System.out.println("Enter L for Light, F for Fan, A for Air Conditioner, or Q to quit");
+            System.out.println("Hi! You are in the Smart Home Appliance Control System!");
 
-            String choice = sc.nextLine().toUpperCase();
+            while (true) {
+                System.out.println("What do you want to choose: Light, Fan, or Air Conditioner?");
 
-            if (choice.equals("Q")) {
-                System.out.println(EXIT_MESSAGE);
-                break;
+                System.out.println("Enter L for Light, F for Fan, A for Air Conditioner, or Q to quit");
+
+                String choice = sc.nextLine().toUpperCase();
+
+                if (choice.equals("Q")) {
+                    System.out.println(EXIT_MESSAGE);
+                    break;
+                }
+
+                switch (choice) {
+                    case "L" -> handleToggleAppliance(sc, light, "Light", light.getState().toString());
+                    case "F" -> handleToggleAppliance(sc, fan, "Fan", String.valueOf(fan.getSpeed()));
+                    case "A" -> handleToggleAppliance(sc, ac, "Air Conditioner", ac.getState().toString());
+                    default -> System.out.println("Invalid selection. Please enter L, F, or A.");
+                }
             }
-
-            switch (choice) {
-                case "L" -> handleToggleAppliance(sc, light, "Light", light.getState().toString());
-                case "F" -> handleToggleAppliance(sc, fan, "Fan", String.valueOf(fan.getSpeed()));
-                case "A" -> handleToggleAppliance(sc, ac, "Air Conditioner", ac.getState().toString());
-                default -> System.out.println("Invalid selection. Please enter L, F, or A.");
-            }
-
         }
-
         sc.close();
+    }
+
+    public static void checkForSystemUpdate(Light light, Fan fan, AirConditioner ac) {
+        LocalDateTime now = LocalDateTime.now();
+
+        // Check if it's January 1st and 1:00 AM local time
+        if (now.getMonth() == Month.JANUARY && now.getDayOfMonth() == 1 && now.getHour() == 1 && now.getMinute() == 0) {
+            System.out.println("System Update: Turning off all devices for the yearly update...");
+
+            light.turnOffForUpdate();
+//            fan.turnOffForUpdate();
+//            ac.turnOffForUpdate();
+        } else {
+            System.out.println("System Update: No update needed at this time.");
+        }
     }
 
     public static <T> void handleToggleAppliance(Scanner sc, T appliance, String applianceName, String currentState) {
